@@ -1,5 +1,5 @@
 # RippleEffectView
-Not only Uber-like animated loading screen.
+Not only Uber-like animated loading screen background.
 
 [![Swift 2.2](https://img.shields.io/badge/Swift-2.2-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![Twitter](https://img.shields.io/badge/Twitter-@ALSEDI-blue.svg?style=flat)](http://twitter.com/alsedi)
@@ -68,7 +68,7 @@ You need this if you change `tileImageRandomizationClosure` when animation did s
 If you want just remove all items (e.g. memory warning) then call `removeGrid`
 
 ## Callbacks
-Tile image randomization.
+### Tile image randomization.
 
 You may setup image for each grid view individually, or customize one that assigned in `tileImage`. (See example for full code)
 ``` swift
@@ -90,10 +90,11 @@ rippleEffectView.tileImageRandomizationClosure = { image in
 }
 ```
 
-Animation Finished
+### Animation Finished
+Main purpose of this component is to create animated screen background. You may stop animation and hide a screen as soon as data available, or wait for the animation end and the show the data.
 ``` swift
 rippleEffectView.animationDidStop = { _ in 
   // do something
 }
 ```
-In fact, animation itself is infinite. If you need to create smooth experience on loading screens then you do not want to stop it in the middle. 
+
