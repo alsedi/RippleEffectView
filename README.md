@@ -1,5 +1,5 @@
 # RippleEffectView
-Not only Uber-like animated loading screen 
+Not only Uber-like animated loading screen.
 
 [![Swift 2.2](https://img.shields.io/badge/Swift-2.2-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![Twitter](https://img.shields.io/badge/Twitter-@ALSEDI-blue.svg?style=flat)](http://twitter.com/alsedi)
@@ -12,7 +12,7 @@ RippleEffectView inspired by RayWenderlich.com article [How To Create an Uber Sp
 - Xcode 7.3
 
 #Installation
-Copy `AnimatedSwitch.swift`to your project. Copy file if needed.
+Copy `RippleEffectView.swift`to your project. Copy file if needed.
 
 #Usage
 Add new RippleEffectView, assign tile image and call startAnimating()
