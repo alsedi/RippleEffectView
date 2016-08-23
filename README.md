@@ -6,7 +6,8 @@ Not only Uber-like animated loading screen background.
 
 RippleEffectView inspired by RayWenderlich.com article [How To Create an Uber Splash Screen](https://www.raywenderlich.com/133224/how-to-create-an-uber-splash-screen)
 
-## How it may looks like
+## How it may looks like 
+*Images in cells can be any*
 ![Ripple Effect with negative magnitude](rippleEffectView1.gif)
 ![Ripple Effect with positive magnitude](rippleEffectView2.gif)
 
