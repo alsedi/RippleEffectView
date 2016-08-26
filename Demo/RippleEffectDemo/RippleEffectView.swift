@@ -25,10 +25,18 @@
 
 import UIKit
 
+enum RippleType {
+  case OneWave
+  case Heartbeat
+}
+
 @IBDesignable
 class RippleEffectView: UIView {
-  typealias RandomizationClosure = (Int, Int, UIImage)->(UIImage)
+  typealias CustomizationClosure = (totalRows:Int, totalColumns:Int, currentRow:Int, currentColumn:Int, originalImage:UIImage)->(UIImage)
   typealias VoidClosure = () -> ()
+  
+  var cellSize:CGSize?
+  var rippleType: RippleType = .OneWave
   
   var tileImage:UIImage!
   var magnitude: CGFloat = -0.6
@@ -39,7 +47,7 @@ class RippleEffectView: UIView {
   private var tiles = [GridItemView]()
   private var isGridRendered: Bool = false
   
-  var tileImageRandomizationClosure: RandomizationClosure? {
+  var tileImageCustomizationClosure: CustomizationClosure? = nil {
     didSet {
       stopAnimating()
       removeGrid()
@@ -131,8 +139,8 @@ extension RippleEffectView {
     guard tileImage != nil else { return }
     
     isGridRendered = true
-    let itemWidth = tileImage.size.width
-    let itemHeight = tileImage.size.height
+    let itemWidth = (cellSize == nil) ? tileImage.size.width : cellSize!.width
+    let itemHeight = (cellSize == nil) ? tileImage.size.height : cellSize!.height
     
     let rows = ((self.rows % 2 == 0) ? self.rows + 3 : self.rows + 2)
     let columns = ((self.columns % 2 == 0) ? self.columns + 3 : self.columns + 2)
@@ -145,13 +153,14 @@ extension RippleEffectView {
     for row in 0..<rows {
       for column in 0..<columns {
         let tileLayer = GridItemView()
-        if let imageRandomization = tileImageRandomizationClosure {
-          tileLayer.tileImage = imageRandomization(row, column, (tileLayer.tileImage == nil) ? tileImage : tileLayer.tileImage!)
-          tileLayer.contents = tileLayer.tileImage!.CGImage
+        if let imageCustomization = tileImageCustomizationClosure {
+          tileLayer.tileImage = imageCustomization(totalRows: self.rows, totalColumns: self.columns, currentRow: row, currentColumn: column, originalImage: (tileLayer.tileImage == nil) ? tileImage : tileLayer.tileImage!)
+          tileLayer.contents = tileLayer.tileImage?.CGImage
         } else {
           tileLayer.contents = tileImage.CGImage
         }
-        tileLayer.frame.size = tileImage.size
+        tileLayer.rippleType = rippleType
+        tileLayer.frame.size = CGSize(width: itemWidth, height: itemHeight)
         tileLayer.contentsScale = contentScaleFactor
         tileLayer.contentsGravity = kCAGravityResize
         tileLayer.position = startPoint
@@ -165,11 +174,19 @@ extension RippleEffectView {
   }
   
   var rows: Int {
-    return Int(self.frame.height / tileImage.size.height)
+    var size = tileImage.size
+    if let _ = cellSize {
+      size = cellSize!
+    }
+    return Int(self.frame.height / size.height)
   }
   
   var columns: Int {
-    return Int(self.frame.width / tileImage.size.width)
+    var size = tileImage.size
+    if let _ = cellSize {
+      size = cellSize!
+    }
+    return Int(self.frame.width / size.width)
   }
 }
 
@@ -190,6 +207,8 @@ private extension UIView {
 
 private class GridItemView: CALayer {
   var tileImage:UIImage?
+  var rippleType:RippleType = .OneWave
+  
   func startAnimatingWithDuration(duration: NSTimeInterval, rippleDelay: NSTimeInterval, rippleOffset: CGPoint) {
     let timingFunction = CAMediaTimingFunction(controlPoints: 0.25, 0, 0.2, 1)
     let linearFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
@@ -198,26 +217,45 @@ private class GridItemView: CALayer {
     var animations = [CAAnimation]()
     
     let scaleAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
-    scaleAnimation.keyTimes = [0, 0.5, 0.6, 1]
-    scaleAnimation.values = [1, 1, 1.15, 1]
-    scaleAnimation.timingFunctions = [linearFunction, timingFunction, timingFunction]
+    if rippleType == .Heartbeat {
+      scaleAnimation.keyTimes = [0, 0.3, 0.4, 0.5, 0.6, 0.69, 0.735, 1]
+      scaleAnimation.timingFunctions = [linearFunction, timingFunction, timingFunction, timingFunction, timingFunction, timingFunction]
+      scaleAnimation.values = [1, 1, 1.35, 1.05, 1.20, 0.95, 1, 1]
+    } else {
+      scaleAnimation.keyTimes = [0, 0.5, 0.6, 1]
+      scaleAnimation.values = [1, 1, 1.15, 1]
+      scaleAnimation.timingFunctions = [linearFunction, timingFunction, timingFunction]
+    }
     scaleAnimation.beginTime = 0.0
     scaleAnimation.duration = duration
     animations.append(scaleAnimation)
     
     let positionAnimation = CAKeyframeAnimation(keyPath: "position")
     positionAnimation.duration = duration
-    positionAnimation.timingFunctions = [linearFunction, timingFunction, timingFunction]
-    positionAnimation.keyTimes = [0, 0.5, 0.6, 1]
-    positionAnimation.values = [zeroPointValue, zeroPointValue, NSValue(CGPoint:rippleOffset), zeroPointValue]
+    if rippleType == .Heartbeat {
+      let secondBeat = CGPoint(x:rippleOffset.x, y:rippleOffset.y)
+      positionAnimation.timingFunctions = [linearFunction, timingFunction, timingFunction, timingFunction, timingFunction, linearFunction]
+      positionAnimation.keyTimes = [0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75, 1]
+      positionAnimation.values = [zeroPointValue, zeroPointValue, NSValue(CGPoint:rippleOffset), zeroPointValue, NSValue(CGPoint:secondBeat), NSValue(CGPoint:CGPoint(x:-rippleOffset.x*0.3,y:-rippleOffset.y*0.3)),zeroPointValue, zeroPointValue]
+    } else {
+      positionAnimation.timingFunctions = [linearFunction, timingFunction, timingFunction]
+      positionAnimation.keyTimes = [0, 0.5, 0.6, 1]
+      positionAnimation.values = [zeroPointValue, zeroPointValue, NSValue(CGPoint:rippleOffset), zeroPointValue]
+    }
     positionAnimation.additive = true
     animations.append(positionAnimation)
     
     let opacityAnimation = CAKeyframeAnimation(keyPath: "opacity")
     opacityAnimation.duration = duration
-    opacityAnimation.timingFunctions = [linearFunction, timingFunction, timingFunction, linearFunction]
-    opacityAnimation.keyTimes = [0, 0.5, 0.6, 0.94, 1]
-    opacityAnimation.values = [1, 1, 0.45, 1, 1]
+    if rippleType == .Heartbeat {
+      opacityAnimation.timingFunctions = [linearFunction, timingFunction, timingFunction, linearFunction]
+      opacityAnimation.keyTimes = [0, 0.3, 0.4, 0.5, 0.6, 0.69, 1]
+      opacityAnimation.values = [1, 1, 0.85, 0.75, 0.90, 1, 1]
+    } else {
+      opacityAnimation.timingFunctions = [linearFunction, timingFunction, timingFunction, linearFunction]
+      opacityAnimation.keyTimes = [0, 0.5, 0.6, 0.94, 1]
+      opacityAnimation.values = [1, 1, 0.45, 1, 1]
+    }
     animations.append(opacityAnimation)
     
     let groupAnimation = CAAnimationGroup()
