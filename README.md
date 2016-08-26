@@ -7,8 +7,50 @@ Not only Uber-like animated loading screen background.
 RippleEffectView inspired by RayWenderlich.com article [How To Create an Uber Splash Screen](https://www.raywenderlich.com/133224/how-to-create-an-uber-splash-screen)
 
 ## How it may looks like 
-![Ripple Effect with negative magnitude](rippleEffectView1.gif)
-![Ripple Effect with positive magnitude](rippleEffectView2.gif)
+### Basic customization (color randomization)
+``` swift
+rippleEffectView.tileImageRandomizationClosure = { image in
+  let newImage = image.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+  UIGraphicsBeginImageContextWithOptions(image.size, false, newImage.scale)
+  UIColor.random.set()
+  newImage.drawInRect(CGRectMake(0, 0, image.size.width, newImage.size.height));
+  if let titledImage = UIGraphicsGetImageFromCurrentImageContext() {
+    UIGraphicsEndImageContext()
+    return titledImage
+  }
+  UIGraphicsEndImageContext()
+  return image
+}
+```
+
+![rippleEffectView.magnitude = -0.6](rippleEffectView1.gif)
+![rippleEffectView.magnitude = 0.2](rippleEffectView2.gif)
+
+### Complex customization
+``` swift
+rippleEffectView.tileImageCustomizationClosure = { rows, columns, row, column, image in
+  let newImage = image.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+  UIGraphicsBeginImageContextWithOptions(image.size, false, newImage.scale)
+      
+  let xmiddle = (columns % 2 != 0) ? columns/2 : columns/2 + 1
+  let ymiddle = (rows % 2 != 0) ? rows/2 : rows/2 + 1
+      
+  let xoffset = abs(xmiddle - column)
+  let yoffset = abs(ymiddle - row)
+      
+  UIColor(hue: 206/360.0, saturation: 1, brightness: 0.95, alpha: 1).colorWithAlphaComponent(1.0 - CGFloat((xoffset + yoffset)) * 0.1).set()
+      
+  newImage.drawInRect(CGRectMake(0, 0, image.size.width, newImage.size.height));
+  if let titledImage = UIGraphicsGetImageFromCurrentImageContext() {
+    UIGraphicsEndImageContext()
+    return titledImage
+  }
+  UIGraphicsEndImageContext()
+  return image
+}
+```
+![rippleEffectView.magnitude = 0.2](rippleEffectView3.gif)
+
 
 ## Requirements
 - Swift 2.2
@@ -54,6 +96,8 @@ All regular UIView and layer properties.
 1. `tileImage` UIImage that will displayed in every title. RippleEffectView uses size of image to calculate grid size. No default value.
 2. `animationDuraton`. Default `3.5`
 3. `magnitude` force that will be applied to every circle to create ripple effect. Uber-like effect is about `0.1` - `0.2`. GIF example `-0.8`
+4. `cellSize` size of tile. Could be helpful if vector image used. Property is optional, if not set then tileImage size will be used.
+5. `rippleType` Type of ripple effect. `.OneWave` and `.Heartbeat`. Default `.OneWave`
 
 ##Read-only properties
 1. `rows` rows count
@@ -68,26 +112,11 @@ You need this if you change `tileImageRandomizationClosure` when animation did s
 If you want just remove all items (e.g. memory warning) then call `removeGrid`
 
 ## Callbacks
-### Tile image randomization.
+### Tile image customization.
 
 You may setup image for each grid view individually, or customize one that assigned in `tileImage`. (See example for full code)
 ``` swift
 var tileImageRandomizationClosure: RandomizationClosure? = (Int, Int, UIImage)->(UIImage)
-```
-This closure returns Row and Column count and tileImage for a tile.
-``` swift
-rippleEffectView.tileImageRandomizationClosure = { image in
-  let newImage = image.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-  UIGraphicsBeginImageContextWithOptions(image.size, false, newImage.scale)
-  UIColor.random.set()
-  newImage.drawInRect(CGRectMake(0, 0, image.size.width, newImage.size.height));
-  if let titledImage = UIGraphicsGetImageFromCurrentImageContext() {
-    UIGraphicsEndImageContext()
-    return titledImage
-  }
-  UIGraphicsEndImageContext()
-  return image
-}
 ```
 
 ### Animation Finished
