@@ -22,8 +22,14 @@ rippleEffectView.tileImageRandomizationClosure = { image in
   return image
 }
 ```
-
+``` swift 
+rippleEffectView.magnitude = -0.6
+```
 ![rippleEffectView.magnitude = -0.6](rippleEffectView1.gif)
+
+``` swift 
+rippleEffectView.magnitude = 0.2
+```
 ![rippleEffectView.magnitude = 0.2](rippleEffectView2.gif)
 
 ### Complex customization
@@ -48,6 +54,9 @@ rippleEffectView.tileImageCustomizationClosure = { rows, columns, row, column, i
   UIGraphicsEndImageContext()
   return image
 }
+```
+``` swift
+rippleEffectView.magnitude = 0.2
 ```
 ![rippleEffectView.magnitude = 0.2](rippleEffectView3.gif)
 
