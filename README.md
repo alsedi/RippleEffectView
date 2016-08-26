@@ -1,7 +1,7 @@
 # RippleEffectView
 Not only Uber-like animated loading screen background.
 
-[![Swift 2.2](https://img.shields.io/badge/Swift-2.2-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Swift 2.3](https://img.shields.io/badge/Swift-2.3-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![Twitter](https://img.shields.io/badge/Twitter-@ALSEDI-blue.svg?style=flat)](http://twitter.com/alsedi)
 [![Blog](https://img.shields.io/badge/Blog-@ALSEDI-green.svg?style=flat)](http://blog.alsedi.com)
 
@@ -64,9 +64,9 @@ rippleEffectView.magnitude = 0.2
 
 
 ## Requirements
-- Swift 2.2
+- Swift 2.3
 - iOS 9.3+
-- Xcode 7.3
+- Xcode 7.3+
 
 #Installation
 Copy `RippleEffectView.swift`to your project. Copy file if needed.
