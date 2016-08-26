@@ -56,6 +56,7 @@ rippleEffectView.tileImageCustomizationClosure = { rows, columns, row, column, i
 }
 ```
 ``` swift
+rippleEffectView.rippleType = .Heartbeat
 rippleEffectView.magnitude = 0.2
 ```
 ![rippleEffectView.magnitude = 0.2](rippleEffectView3.gif)
