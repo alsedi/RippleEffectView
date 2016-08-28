@@ -81,7 +81,7 @@ rippleEffectView.magnitude = 0.3
 view.addSubview(rippleEffectView)
 rippleEffectView.startAnimating()
 ```
-NB! startAnimating doesn't work if called in viewWillLoad and viewWillAppear. Working on fix. Place `startAnimating()` in `viewDidAppear()`
+NB! startAnimating doesn't work if called in viewDidLoad and viewWillAppear. Working on fix. Place `startAnimating()` in `viewDidAppear()`
 
 ## Configurable properties
 NB! RippleEffectView initialize itself with parent view bounds automatically, so you do not need to set it manually. If you need to use it in limited view, then use auxiliary view, e.g.
