@@ -10,7 +10,7 @@ RippleEffectView inspired by RayWenderlich.com article [How To Create an Uber Sp
 ## How it may looks like 
 ### Basic customization (color randomization)
 ``` swift
-rippleEffectView.tileImageRandomizationClosure = { image in
+rippleEffectView.tileImageRandomizationClosure = { rows, columns, row, column, image in
   let newImage = image.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
   UIGraphicsBeginImageContextWithOptions(image.size, false, newImage.scale)
   UIColor.random.set()
