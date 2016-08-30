@@ -72,10 +72,7 @@ rippleEffectView.magnitude = 0.2
 Copy `RippleEffectView.swift`to your project. Copy file if needed.
 
 #Usage
-Add new RippleEffectView, assign tile image and call startAnimating()
-
-## How to create
-### Programatically 
+Add new RippleEffectView, assign `tileImage` and call `startAnimating()`.
 ``` swift
 let rippleEffectView = RippleEffectView()
 rippleEffectView.image = UIImage(imageNamed: "someImage") 
@@ -84,11 +81,7 @@ rippleEffectView.magnitude = 0.3
 view.addSubview(rippleEffectView)
 rippleEffectView.startAnimating()
 ```
-
-### Storyboard and XIB
-1. Drap and drop a new UIView
-2. Set the class of the UIView to RippleEffectView
-Due to some issues with XCode 8 and IB I desided to not expose any properties to IB. 
+NB! startAnimating doesn't work if called in viewDidLoad and viewWillAppear. Working on fix. Place `startAnimating()` in `viewDidAppear()`
 
 ## Configurable properties
 NB! RippleEffectView initialize itself with parent view bounds automatically, so you do not need to set it manually. If you need to use it in limited view, then use auxiliary view, e.g.
