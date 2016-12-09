@@ -1,0 +1,6 @@
+framework module RippleEffectView {
+  umbrella header "RippleEffectView-umbrella.h"
+
+  export *
+  module * { export * }
+}
