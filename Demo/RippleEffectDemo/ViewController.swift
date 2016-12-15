@@ -39,7 +39,7 @@ extension UIColor {
 class ViewController: UIViewController {
   var rippleEffectView: RippleEffectView!
 
-  override func prefersStatusBarHidden() -> Bool {
+  override var prefersStatusBarHidden : Bool {
     return true
   }
   
@@ -48,7 +48,7 @@ class ViewController: UIViewController {
     rippleEffectView.tileImage = UIImage(named: "cell-image")
     rippleEffectView.magnitude = 0.2
     rippleEffectView.cellSize = CGSize(width:50, height:50)
-    rippleEffectView.rippleType = .Heartbeat
+    rippleEffectView.rippleType = .heartbeat
     view.addSubview(rippleEffectView)
     
     //Example, simple tile image customization
@@ -71,7 +71,7 @@ class ViewController: UIViewController {
     
     //Example 2: Complex tile image customization
     rippleEffectView.tileImageCustomizationClosure = { rows, columns, row, column, image in
-      let newImage = image.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+      let newImage = image.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
       UIGraphicsBeginImageContextWithOptions(image.size, false, newImage.scale)
       
       let xmiddle = (columns % 2 != 0) ? columns/2 : columns/2 + 1
@@ -80,9 +80,9 @@ class ViewController: UIViewController {
       let xoffset = abs(xmiddle - column)
       let yoffset = abs(ymiddle - row)
       
-      UIColor(hue: 206/360.0, saturation: 1, brightness: 0.95, alpha: 1).colorWithAlphaComponent(1.0 - CGFloat((xoffset + yoffset)) * 0.1).set()
+      UIColor(hue: 206/360.0, saturation: 1, brightness: 0.95, alpha: 1).withAlphaComponent(1.0 - CGFloat((xoffset + yoffset)) * 0.1).set()
       
-      newImage.drawInRect(CGRectMake(0, 0, image.size.width, newImage.size.height));
+      newImage.draw(in: CGRect(x: 0, y: 0, width: image.size.width, height: newImage.size.height));
       if let titledImage = UIGraphicsGetImageFromCurrentImageContext() {
         UIGraphicsEndImageContext()
         return titledImage
@@ -96,13 +96,13 @@ class ViewController: UIViewController {
     rippleEffectView.setupView()
     rippleEffectView.animationDidStop = { [unowned self] in
       //Each time animation sequency finished this callback will change background of the wrapper view.
-      UIView.animateWithDuration(1.5) { _ in
-        self.rippleEffectView.backgroundColor = UIColor.random.colorWithAlphaComponent(0.25)
-      }
+      UIView.animate(withDuration: 1.5, animations: { _ in
+        self.rippleEffectView.backgroundColor = UIColor.random.withAlphaComponent(0.25)
+      }) 
     }
   }
   
-  override func viewDidAppear(animated: Bool) {
+  override func viewDidAppear(_ animated: Bool) {
     rippleEffectView.startAnimating()
   }
 }

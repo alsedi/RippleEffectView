@@ -26,17 +26,17 @@
 import UIKit
 
 enum RippleType {
-  case OneWave
-  case Heartbeat
+  case oneWave
+  case heartbeat
 }
 
 @IBDesignable
 class RippleEffectView: UIView {
-  typealias CustomizationClosure = (totalRows:Int, totalColumns:Int, currentRow:Int, currentColumn:Int, originalImage:UIImage)->(UIImage)
+  typealias CustomizationClosure = (_ totalRows:Int, _ totalColumns:Int, _ currentRow:Int, _ currentColumn:Int, _ originalImage:UIImage)->(UIImage)
   typealias VoidClosure = () -> ()
   
   var cellSize:CGSize?
-  var rippleType: RippleType = .OneWave
+  var rippleType: RippleType = .oneWave
   
   var tileImage:UIImage!
   var magnitude: CGFloat = -0.6
@@ -44,8 +44,8 @@ class RippleEffectView: UIView {
 
   var isAnimating: Bool = false
 
-  private var tiles = [GridItemView]()
-  private var isGridRendered: Bool = false
+  fileprivate var tiles = [GridItemView]()
+  fileprivate var isGridRendered: Bool = false
   
   var tileImageCustomizationClosure: CustomizationClosure? = nil {
     didSet {
@@ -68,8 +68,8 @@ class RippleEffectView: UIView {
 
 // MARK: View operations
 extension RippleEffectView {
-  override func willMoveToSuperview(newSuperview: UIView?) {
-    if let parent = newSuperview where newSuperview != nil {
+  override func willMove(toSuperview newSuperview: UIView?) {
+    if let parent = newSuperview, newSuperview != nil {
       self.frame = CGRect(x: 0, y: 0, width: parent.frame.width, height: parent.frame.height)
     }
   }
@@ -118,7 +118,7 @@ extension RippleEffectView {
       var vector = self.normalizedVector(fromPoint:tile.position, toPoint:self.center)
       
       vector = CGPoint(x:vector.x * magnitude * distance, y: vector.y * magnitude * distance)
-      tile.startAnimatingWithDuration(animationDuration, rippleDelay: animationDuration - 0.0006666 * NSTimeInterval(distance), rippleOffset: vector)
+      tile.startAnimatingWithDuration(animationDuration, rippleDelay: animationDuration - 0.0006666 * TimeInterval(distance), rippleOffset: vector)
     }
   }
 }
@@ -154,10 +154,10 @@ extension RippleEffectView {
       for column in 0..<columns {
         let tileLayer = GridItemView()
         if let imageCustomization = tileImageCustomizationClosure {
-          tileLayer.tileImage = imageCustomization(totalRows: self.rows, totalColumns: self.columns, currentRow: row, currentColumn: column, originalImage: (tileLayer.tileImage == nil) ? tileImage : tileLayer.tileImage!)
-          tileLayer.contents = tileLayer.tileImage?.CGImage
+          tileLayer.tileImage = imageCustomization(self.rows, self.columns, row, column, (tileLayer.tileImage == nil) ? tileImage : tileLayer.tileImage!)
+          tileLayer.contents = tileLayer.tileImage?.cgImage
         } else {
-          tileLayer.contents = tileImage.CGImage
+          tileLayer.contents = tileImage.cgImage
         }
         tileLayer.rippleType = rippleType
         tileLayer.frame.size = CGSize(width: itemWidth, height: itemHeight)
@@ -192,13 +192,13 @@ extension RippleEffectView {
 
 //MARK: Helper methods
 private extension UIView {
-  func distance(fromPoint fromPoint:CGPoint,toPoint:CGPoint)->CGFloat {
+  func distance(fromPoint:CGPoint,toPoint:CGPoint)->CGFloat {
     let nX = (fromPoint.x - toPoint.x)
     let nY = (fromPoint.y - toPoint.y)
     return sqrt(nX*nX + nY*nY)
   }
   
-  func normalizedVector(fromPoint fromPoint:CGPoint,toPoint:CGPoint)->CGPoint {
+  func normalizedVector(fromPoint:CGPoint,toPoint:CGPoint)->CGPoint {
     let length = distance(fromPoint:fromPoint, toPoint:toPoint)
     guard length > 0 else { return CGPoint.zero }
     return CGPoint(x:(fromPoint.x - toPoint.x)/length, y:(fromPoint.y - toPoint.y)/length)
@@ -207,17 +207,17 @@ private extension UIView {
 
 private class GridItemView: CALayer {
   var tileImage:UIImage?
-  var rippleType:RippleType = .OneWave
+  var rippleType:RippleType = .oneWave
   
-  func startAnimatingWithDuration(duration: NSTimeInterval, rippleDelay: NSTimeInterval, rippleOffset: CGPoint) {
+  func startAnimatingWithDuration(_ duration: TimeInterval, rippleDelay: TimeInterval, rippleOffset: CGPoint) {
     let timingFunction = CAMediaTimingFunction(controlPoints: 0.25, 0, 0.2, 1)
     let linearFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-    let zeroPointValue = NSValue(CGPoint: CGPointZero)
+    let zeroPointValue = NSValue(cgPoint: CGPoint.zero)
     
     var animations = [CAAnimation]()
     
     let scaleAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
-    if rippleType == .Heartbeat {
+    if rippleType == .heartbeat {
       scaleAnimation.keyTimes = [0, 0.3, 0.4, 0.5, 0.6, 0.69, 0.735, 1]
       scaleAnimation.timingFunctions = [linearFunction, timingFunction, timingFunction, timingFunction, timingFunction, timingFunction]
       scaleAnimation.values = [1, 1, 1.35, 1.05, 1.20, 0.95, 1, 1]
@@ -232,22 +232,22 @@ private class GridItemView: CALayer {
     
     let positionAnimation = CAKeyframeAnimation(keyPath: "position")
     positionAnimation.duration = duration
-    if rippleType == .Heartbeat {
+    if rippleType == .heartbeat {
       let secondBeat = CGPoint(x:rippleOffset.x, y:rippleOffset.y)
       positionAnimation.timingFunctions = [linearFunction, timingFunction, timingFunction, timingFunction, timingFunction, linearFunction]
       positionAnimation.keyTimes = [0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75, 1]
-      positionAnimation.values = [zeroPointValue, zeroPointValue, NSValue(CGPoint:rippleOffset), zeroPointValue, NSValue(CGPoint:secondBeat), NSValue(CGPoint:CGPoint(x:-rippleOffset.x*0.3,y:-rippleOffset.y*0.3)),zeroPointValue, zeroPointValue]
+      positionAnimation.values = [zeroPointValue, zeroPointValue, NSValue(cgPoint:rippleOffset), zeroPointValue, NSValue(cgPoint:secondBeat), NSValue(cgPoint:CGPoint(x:-rippleOffset.x*0.3,y:-rippleOffset.y*0.3)),zeroPointValue, zeroPointValue]
     } else {
       positionAnimation.timingFunctions = [linearFunction, timingFunction, timingFunction]
       positionAnimation.keyTimes = [0, 0.5, 0.6, 1]
-      positionAnimation.values = [zeroPointValue, zeroPointValue, NSValue(CGPoint:rippleOffset), zeroPointValue]
+      positionAnimation.values = [zeroPointValue, zeroPointValue, NSValue(cgPoint:rippleOffset), zeroPointValue]
     }
-    positionAnimation.additive = true
+    positionAnimation.isAdditive = true
     animations.append(positionAnimation)
     
     let opacityAnimation = CAKeyframeAnimation(keyPath: "opacity")
     opacityAnimation.duration = duration
-    if rippleType == .Heartbeat {
+    if rippleType == .heartbeat {
       opacityAnimation.timingFunctions = [linearFunction, timingFunction, timingFunction, linearFunction]
       opacityAnimation.keyTimes = [0, 0.3, 0.4, 0.5, 0.6, 0.69, 1]
       opacityAnimation.values = [1, 1, 0.85, 0.75, 0.90, 1, 1]
@@ -263,12 +263,12 @@ private class GridItemView: CALayer {
     groupAnimation.fillMode = kCAFillModeBackwards
     groupAnimation.duration = duration
     groupAnimation.beginTime = rippleDelay
-    groupAnimation.removedOnCompletion = false
+    groupAnimation.isRemovedOnCompletion = false
     groupAnimation.animations = animations
     groupAnimation.timeOffset = 0.35 * duration
     
     shouldRasterize = true
-    addAnimation(groupAnimation, forKey: "ripple")
+    add(groupAnimation, forKey: "ripple")
   }
   
   func stopAnimating() {
@@ -276,6 +276,6 @@ private class GridItemView: CALayer {
   }
 }
 
-func waitAndRun(delay:Double, closure:()->()) {
-  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), closure)
+func waitAndRun(_ delay:Double, closure:@escaping ()->()) {
+  DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
 }

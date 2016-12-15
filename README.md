@@ -1,9 +1,10 @@
 # RippleEffectView
-Not only Uber-like animated loading screen background.
+Not only Uber-like animated screen background.
 
-[![Swift 2.3](https://img.shields.io/badge/Swift-2.3-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Swift 3.0](https://img.shields.io/badge/Swift-3.x-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Pod](https://img.shields.io/cocoapods/p/RippleEffectView.svg?style=flat)](http://cocoapods.org/pods/RippleEffectView)
 [![Twitter](https://img.shields.io/badge/Twitter-@ALSEDI-blue.svg?style=flat)](http://twitter.com/alsedi)
-[![Blog](https://img.shields.io/badge/Blog-@ALSEDI-green.svg?style=flat)](http://blog.alsedi.com)
+[![Blog](https://img.shields.io/badge/Blog-ALSEDI-green.svg?style=flat)](http://blog.alsedi.com)
 
 RippleEffectView inspired by RayWenderlich.com article [How To Create an Uber Splash Screen](https://www.raywenderlich.com/133224/how-to-create-an-uber-splash-screen)
 
@@ -64,12 +65,25 @@ rippleEffectView.magnitude = 0.2
 
 
 ## Requirements
-- Swift 2.3
+- Swift 3.0+
 - iOS 9.3+
-- Xcode 7.3+
+- Xcode 8.0+
 
-#Installation
-Copy `RippleEffectView.swift`to your project. Copy file if needed.
+# Installation
+
+## CocoaPods
+RippleEffectView is available through [CocoaPods](http://cocoapods.org/pods/RippleEffectView). To install
+it, simply add the following line to your Podfile:
+
+```ruby
+target 'Your Project' do
+	use_frameworks!
+	pod "RippleEffectView"
+end
+```
+
+### Manual
+Copy `RippleEffectView.swift`to your project, then 
 
 #Usage
 Add new RippleEffectView, assign `tileImage` and call `startAnimating()`.
@@ -87,16 +101,8 @@ NB! startAnimating doesn't work if called in viewDidLoad and viewWillAppear. Wor
 NB! RippleEffectView initialize itself with parent view bounds automatically, so you do not need to set it manually. If you need to use it in limited view, then use auxiliary view, e.g.
 
 Animation uses `transform`, `scale` and `opacity`. 
-```
-TopView
-+- ContainerView
-  +- RippleEffectView
-     +- CALayer with animation
-```
 
-```
-All regular UIView and layer properties.
-```
+### Special properties
 1. `tileImage` UIImage that will displayed in every title. RippleEffectView uses size of image to calculate grid size. No default value.
 2. `animationDuraton`. Default `3.5`
 3. `magnitude` force that will be applied to every circle to create ripple effect. Uber-like effect is about `0.1` - `0.2`. GIF example `-0.8`
@@ -112,15 +118,15 @@ All regular UIView and layer properties.
 `startAnimating` Stop all animations
 
 ### Manual control of the grid.
-You need this if you change `tileImageRandomizationClosure` when animation did start. When you call `renderGrid` to recreate all items.
+You will need this if you change `tileImageRandomizationClosure`. When you call `renderGrid` to recreate all items.
 If you want just remove all items (e.g. memory warning) then call `removeGrid`
 
 ## Callbacks
 ### Tile image customization.
 
-You may setup image for each grid view individually, or customize one that assigned in `tileImage`. (See example for full code)
+You may setup image for each grid view individually, or customize one that assigned in `tileImage`. (See Demo project for example code)
 ``` swift
-var tileImageRandomizationClosure: RandomizationClosure? = (Int, Int, UIImage)->(UIImage)
+var tileImageRandomizationClosure: RandomizationClosure? = (totalRows:Int, totalColumns:Int, currentRow:Int, currentColumn:Int, originalImage:UIImage)->(UIImage)
 ```
 
 ### Animation Finished
@@ -130,4 +136,3 @@ rippleEffectView.animationDidStop = { _ in
   // do something
 }
 ```
-
