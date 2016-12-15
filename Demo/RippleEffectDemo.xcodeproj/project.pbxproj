@@ -99,7 +99,6 @@
 				TargetAttributes = {
 					1549DBA31D6A28CD002AE54D = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = P4KHK354DV;
 						LastSwiftMigration = 0810;
 					};
 				};
@@ -262,7 +261,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = P4KHK354DV;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = RippleEffectDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alsedi.RippleEffectDemo;
@@ -275,7 +274,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = P4KHK354DV;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = RippleEffectDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alsedi.RippleEffectDemo;
