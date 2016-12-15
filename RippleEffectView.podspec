@@ -9,9 +9,10 @@
 Pod::Spec.new do |s|
   s.name             = 'RippleEffectView'
   s.version          = '1.0.0'
-  s.summary          = 'RippleEffectView inspired by RayWenderlich.com article How To Create an Uber Splash Screen'
+  s.summary          = 'RippleEffectView - A Neat Rippling View Effect'
 
   s.description      = <<-DESC
+                        RippleEffectView inspired by RayWenderlich.com article How To Create an Uber Splash Screen
                         Not only Uber-like animated loading screen background.
                         RippleEffectView inspired by [https://www.raywenderlich.com/133224/how-to-create-an-uber-splash-screen](RayWenderlich.com) article How To Create an Uber Splash Screen
                        DESC
@@ -24,10 +25,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'RippleEffectView/Classes/**/*'
+  s.source_files = 'RippleEffectView/**/*'
   
-  # s.resource_bundles = {
-  #   'RippleEffectView' => ['RippleEffectView/Assets/*.png']
-  # }
-   s.frameworks = 'UIKit'
+  s.frameworks = 'UIKit'
 end

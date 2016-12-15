@@ -1,29 +1,10 @@
 # RippleEffectView
-
-[![CI Status](http://img.shields.io/travis/Maximilian Alexander/RippleEffectView.svg?style=flat)](https://travis-ci.org/Maximilian Alexander/RippleEffectView)
-[![Version](https://img.shields.io/cocoapods/v/RippleEffectView.svg?style=flat)](http://cocoapods.org/pods/RippleEffectView)
-[![License](https://img.shields.io/cocoapods/l/RippleEffectView.svg?style=flat)](http://cocoapods.org/pods/RippleEffectView)
-[![Platform](https://img.shields.io/cocoapods/p/RippleEffectView.svg?style=flat)](http://cocoapods.org/pods/RippleEffectView)
-
+Not only Uber-like animated screen background.
 
 [![Swift 3.0](https://img.shields.io/badge/Swift-3.x-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Pod](https://img.shields.io/cocoapods/p/RippleEffectView.svg?style=flat)](http://cocoapods.org/pods/RippleEffectView)
 [![Twitter](https://img.shields.io/badge/Twitter-@ALSEDI-blue.svg?style=flat)](http://twitter.com/alsedi)
-[![Blog](https://img.shields.io/badge/Blog-@ALSEDI-green.svg?style=flat)](http://blog.alsedi.com)
-
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
-## Requirements
-
-## Installation
-
-RippleEffectView is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
-
-```ruby
-pod "RippleEffectView"
-```
+[![Blog](https://img.shields.io/badge/Blog-ALSEDI-green.svg?style=flat)](http://blog.alsedi.com)
 
 RippleEffectView inspired by RayWenderlich.com article [How To Create an Uber Splash Screen](https://www.raywenderlich.com/133224/how-to-create-an-uber-splash-screen)
 
@@ -31,16 +12,16 @@ RippleEffectView inspired by RayWenderlich.com article [How To Create an Uber Sp
 ### Basic customization (color randomization)
 ``` swift
 rippleEffectView.tileImageRandomizationClosure = { rows, columns, row, column, image in
-let newImage = image.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-UIGraphicsBeginImageContextWithOptions(image.size, false, newImage.scale)
-UIColor.random.set()
-newImage.drawInRect(CGRectMake(0, 0, image.size.width, newImage.size.height));
-if let titledImage = UIGraphicsGetImageFromCurrentImageContext() {
-UIGraphicsEndImageContext()
-return titledImage
-}
-UIGraphicsEndImageContext()
-return image
+  let newImage = image.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+  UIGraphicsBeginImageContextWithOptions(image.size, false, newImage.scale)
+  UIColor.random.set()
+  newImage.drawInRect(CGRectMake(0, 0, image.size.width, newImage.size.height));
+  if let titledImage = UIGraphicsGetImageFromCurrentImageContext() {
+    UIGraphicsEndImageContext()
+    return titledImage
+  }
+  UIGraphicsEndImageContext()
+  return image
 }
 ```
 ``` swift 
@@ -56,24 +37,24 @@ rippleEffectView.magnitude = 0.2
 ### Complex customization
 ``` swift
 rippleEffectView.tileImageCustomizationClosure = { rows, columns, row, column, image in
-let newImage = image.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-UIGraphicsBeginImageContextWithOptions(image.size, false, newImage.scale)
-
-let xmiddle = (columns % 2 != 0) ? columns/2 : columns/2 + 1
-let ymiddle = (rows % 2 != 0) ? rows/2 : rows/2 + 1
-
-let xoffset = abs(xmiddle - column)
-let yoffset = abs(ymiddle - row)
-
-UIColor(hue: 206/360.0, saturation: 1, brightness: 0.95, alpha: 1).colorWithAlphaComponent(1.0 - CGFloat((xoffset + yoffset)) * 0.1).set()
-
-newImage.drawInRect(CGRectMake(0, 0, image.size.width, newImage.size.height));
-if let titledImage = UIGraphicsGetImageFromCurrentImageContext() {
-UIGraphicsEndImageContext()
-return titledImage
-}
-UIGraphicsEndImageContext()
-return image
+  let newImage = image.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+  UIGraphicsBeginImageContextWithOptions(image.size, false, newImage.scale)
+      
+  let xmiddle = (columns % 2 != 0) ? columns/2 : columns/2 + 1
+  let ymiddle = (rows % 2 != 0) ? rows/2 : rows/2 + 1
+      
+  let xoffset = abs(xmiddle - column)
+  let yoffset = abs(ymiddle - row)
+      
+  UIColor(hue: 206/360.0, saturation: 1, brightness: 0.95, alpha: 1).colorWithAlphaComponent(1.0 - CGFloat((xoffset + yoffset)) * 0.1).set()
+      
+  newImage.drawInRect(CGRectMake(0, 0, image.size.width, newImage.size.height));
+  if let titledImage = UIGraphicsGetImageFromCurrentImageContext() {
+    UIGraphicsEndImageContext()
+    return titledImage
+  }
+  UIGraphicsEndImageContext()
+  return image
 }
 ```
 ``` swift
@@ -84,12 +65,25 @@ rippleEffectView.magnitude = 0.2
 
 
 ## Requirements
-- Swift 3.0
+- Swift 3.0+
 - iOS 9.3+
 - Xcode 8.0+
 
-#Installation
-Copy `RippleEffectView.swift`to your project. Copy file if needed.
+# Installation
+
+## CocoaPods
+RippleEffectView is available through [CocoaPods](http://cocoapods.org/pods/RippleEffectView). To install
+it, simply add the following line to your Podfile:
+
+```ruby
+target 'Your Project' do
+	use_frameworks!
+	pod "RippleEffectView"
+end
+```
+
+### Manual
+Copy `RippleEffectView.swift`to your project, then 
 
 #Usage
 Add new RippleEffectView, assign `tileImage` and call `startAnimating()`.
@@ -107,16 +101,8 @@ NB! startAnimating doesn't work if called in viewDidLoad and viewWillAppear. Wor
 NB! RippleEffectView initialize itself with parent view bounds automatically, so you do not need to set it manually. If you need to use it in limited view, then use auxiliary view, e.g.
 
 Animation uses `transform`, `scale` and `opacity`. 
-```
-TopView
-+- ContainerView
-+- RippleEffectView
-+- CALayer with animation
-```
 
-```
-All regular UIView and layer properties.
-```
+### Special properties
 1. `tileImage` UIImage that will displayed in every title. RippleEffectView uses size of image to calculate grid size. No default value.
 2. `animationDuraton`. Default `3.5`
 3. `magnitude` force that will be applied to every circle to create ripple effect. Uber-like effect is about `0.1` - `0.2`. GIF example `-0.8`
@@ -132,21 +118,21 @@ All regular UIView and layer properties.
 `startAnimating` Stop all animations
 
 ### Manual control of the grid.
-You need this if you change `tileImageRandomizationClosure` when animation did start. When you call `renderGrid` to recreate all items.
+You will need this if you change `tileImageRandomizationClosure`. When you call `renderGrid` to recreate all items.
 If you want just remove all items (e.g. memory warning) then call `removeGrid`
 
 ## Callbacks
 ### Tile image customization.
 
-You may setup image for each grid view individually, or customize one that assigned in `tileImage`. (See example for full code)
+You may setup image for each grid view individually, or customize one that assigned in `tileImage`. (See Demo project for example code)
 ``` swift
-var tileImageRandomizationClosure: RandomizationClosure? = (Int, Int, UIImage)->(UIImage)
+var tileImageRandomizationClosure: RandomizationClosure? = (totalRows:Int, totalColumns:Int, currentRow:Int, currentColumn:Int, originalImage:UIImage)->(UIImage)
 ```
 
 ### Animation Finished
 Main purpose of this component is to create animated screen background. You may stop animation and hide a screen as soon as data available, or wait for the animation end and the show the data.
 ``` swift
 rippleEffectView.animationDidStop = { _ in 
-// do something
+  // do something
 }
 ```
