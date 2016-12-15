@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'RippleEffectView'
-  s.version          = '1.0.0'
+  s.version          = '1.0.2'
   s.summary          = 'RippleEffectView - A Neat Rippling View Effect'
 
   s.description      = <<-DESC
