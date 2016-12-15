@@ -77,8 +77,8 @@ it, simply add the following line to your Podfile:
 
 ```ruby
 target 'Your Project' do
-	use_frameworks!
-	pod "RippleEffectView"
+   use_frameworks!
+   pod "RippleEffectView"
 end
 ```
 
@@ -88,12 +88,12 @@ Copy `RippleEffectView.swift`to your project, then
 #Usage
 Add new RippleEffectView, assign `tileImage` and call `startAnimating()`.
 ``` swift
-let rippleEffectView = RippleEffectView()
-rippleEffectView.image = UIImage(imageNamed: "someImage") 
-rippleEffectView.animationDuration = 4
-rippleEffectView.magnitude = 0.3
+rippleEffectView = RippleEffectView()
+rippleEffectView.tileImage = UIImage(named: "some image")
+rippleEffectView.magnitude = 0.2
+rippleEffectView.cellSize = CGSize(width:50, height:50)
+rippleEffectView.rippleType = .heartbeat
 view.addSubview(rippleEffectView)
-rippleEffectView.startAnimating()
 ```
 NB! startAnimating doesn't work if called in viewDidLoad and viewWillAppear. Working on fix. Place `startAnimating()` in `viewDidAppear()`
 
